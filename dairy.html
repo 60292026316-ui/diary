@@ -1,0 +1,1728 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2〜3行日記</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-width: 320px;
+      background: #f5f6f4;
+      color: #334155;
+      font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        "Noto Sans JP",
+        sans-serif;
+    }
+
+    button,
+    input,
+    textarea {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    .container {
+      width: min(1050px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 45px 0 60px;
+    }
+
+    header {
+      margin-bottom: 32px;
+    }
+
+    .logo {
+      margin: 0 0 8px;
+      color: #94a3b8;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 2px;
+    }
+
+    h1 {
+      margin: 0;
+      color: #1e293b;
+      font-size: clamp(28px, 5vw, 42px);
+      letter-spacing: -1px;
+    }
+
+    .subtitle {
+      margin: 12px 0 0;
+      color: #94a3b8;
+      font-size: 14px;
+      line-height: 1.8;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 370px 1fr;
+      gap: 24px;
+      align-items: start;
+    }
+
+    .left {
+      position: sticky;
+      top: 20px;
+    }
+
+    .card {
+      background: #fff;
+      border: 1px solid #e2e8f0;
+      border-radius: 24px;
+      padding: 24px;
+      box-shadow: 0 5px 20px rgba(15, 23, 42, 0.04);
+    }
+
+    .card + .card {
+      margin-top: 20px;
+    }
+
+    .card-title {
+      margin: 0 0 20px;
+      color: #1e293b;
+      font-size: 18px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      color: #64748b;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    input[type="date"],
+    textarea {
+      width: 100%;
+      border: 1px solid #e2e8f0;
+      border-radius: 14px;
+      background: #f8fafc;
+      color: #334155;
+      outline: none;
+      transition: 0.2s;
+    }
+
+    input[type="date"] {
+      height: 48px;
+      padding: 0 14px;
+      margin-bottom: 18px;
+    }
+
+    textarea {
+      min-height: 105px;
+      padding: 13px 15px;
+      resize: none;
+      line-height: 1.8;
+    }
+
+    input[type="date"]:focus,
+    textarea:focus {
+      background: #fff;
+      border-color: #cbd5e1;
+      box-shadow: 0 0 0 3px rgba(148, 163, 184, 0.15);
+    }
+
+    .counter {
+      margin: 5px 2px 20px;
+      color: #cbd5e1;
+      font-size: 11px;
+      text-align: right;
+    }
+
+    .moods {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 22px;
+    }
+
+    .mood {
+      width: 50px;
+      height: 50px;
+      border: 0;
+      border-radius: 16px;
+      background: #f1f5f9;
+      font-size: 24px;
+      transition: 0.2s;
+    }
+
+    .mood:hover {
+      transform: translateY(-2px);
+      background: #e2e8f0;
+    }
+
+    .mood.selected {
+      transform: scale(1.08);
+      background: #fff;
+      box-shadow:
+        0 4px 12px rgba(15, 23, 42, 0.1),
+        0 0 0 2px #cbd5e1;
+    }
+
+    .buttons {
+      display: flex;
+      gap: 10px;
+    }
+
+    .save-btn {
+      flex: 1;
+      height: 48px;
+      border: 0;
+      border-radius: 15px;
+      background: #1e293b;
+      color: white;
+      font-weight: 600;
+      transition: 0.2s;
+    }
+
+    .save-btn:hover {
+      transform: translateY(-2px);
+      background: #334155;
+    }
+
+    .cancel-btn {
+      padding: 0 18px;
+      border: 0;
+      border-radius: 15px;
+      background: #f1f5f9;
+      color: #64748b;
+    }
+
+    .cancel-btn:hover {
+      background: #e2e8f0;
+    }
+
+    .calendar-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 18px;
+    }
+
+    .calendar-title {
+      color: #1e293b;
+      font-size: 15px;
+      font-weight: 700;
+    }
+
+    .calendar-buttons {
+      display: flex;
+      gap: 4px;
+    }
+
+    .calendar-buttons button {
+      width: 30px;
+      height: 30px;
+      border: 0;
+      border-radius: 9px;
+      background: #f1f5f9;
+      color: #64748b;
+    }
+
+    .calendar-buttons button:hover {
+      background: #e2e8f0;
+    }
+
+    .weekdays,
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 4px;
+      text-align: center;
+    }
+
+    .weekdays {
+      margin-bottom: 5px;
+      color: #94a3b8;
+      font-size: 11px;
+    }
+
+    .day {
+      position: relative;
+      display: flex;
+      height: 38px;
+      align-items: center;
+      justify-content: center;
+      border-radius: 11px;
+      color: #64748b;
+      font-size: 12px;
+    }
+
+    .day.has-diary {
+      background: #1e293b;
+      color: white;
+      font-weight: 700;
+    }
+
+    .day.today {
+      box-shadow: inset 0 0 0 1px #cbd5e1;
+    }
+
+    .day.has-diary.today {
+      box-shadow: inset 0 0 0 2px #94a3b8;
+    }
+
+    .timeline-header {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      margin-bottom: 15px;
+    }
+
+    .timeline-title {
+      margin: 0;
+      color: #1e293b;
+      font-size: 21px;
+    }
+
+    .count {
+      color: #94a3b8;
+      font-size: 12px;
+    }
+
+    .diary-list {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .diary {
+      padding: 21px;
+      border: 1px solid #e2e8f0;
+      border-radius: 22px;
+      background: white;
+      box-shadow: 0 5px 20px rgba(15, 23, 42, 0.035);
+      animation: appear 0.35s ease;
+      transition: 0.2s;
+    }
+
+    .diary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(15, 23, 42, 0.07);
+    }
+
+    @keyframes appear {
+      from {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .diary-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    .diary-date {
+      color: #94a3b8;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .diary-mood {
+      font-size: 23px;
+    }
+
+    .diary-text {
+      margin: 0;
+      white-space: pre-wrap;
+      word-break: break-word;
+      color: #475569;
+      font-size: 14px;
+      line-height: 1.9;
+    }
+
+    .diary-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 14px;
+      margin-top: 13px;
+    }
+
+    .action {
+      border: 0;
+      background: transparent;
+      color: #94a3b8;
+      font-size: 11px;
+    }
+
+    .action:hover {
+      color: #334155;
+    }
+
+    .delete:hover {
+      color: #ef4444;
+    }
+
+    .empty {
+      padding: 55px 20px;
+      border: 1px solid #e2e8f0;
+      border-radius: 22px;
+      background: white;
+      text-align: center;
+    }
+
+    .empty-icon {
+      margin-bottom: 12px;
+      font-size: 38px;
+    }
+
+    .empty-title {
+      margin: 0;
+      color: #64748b;
+      font-weight: 600;
+    }
+
+    .empty-text {
+      margin: 7px 0 0;
+      color: #94a3b8;
+      font-size: 12px;
+    }
+
+    .toast {
+      position: fixed;
+      right: 20px;
+      bottom: 20px;
+      z-index: 100;
+      padding: 13px 18px;
+      border-radius: 14px;
+      background: #1e293b;
+      color: white;
+      font-size: 13px;
+      box-shadow: 0 10px 30px rgba(15, 23, 42, 0.2);
+      opacity: 0;
+      transform: translateY(10px);
+      pointer-events: none;
+      transition: 0.3s;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @media (max-width: 800px) {
+      .container {
+        padding-top: 28px;
+      }
+
+      .layout {
+        grid-template-columns: 1fr;
+      }
+
+      .left {
+        position: static;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        width: min(100% - 20px, 1050px);
+        padding-top: 22px;
+      }
+
+      .card {
+        padding: 19px;
+        border-radius: 20px;
+      }
+
+      h1 {
+        font-size: 30px;
+      }
+
+      .diary {
+        padding: 18px;
+        border-radius: 19px;
+      }
+    }
+
+    /* ---- グループボタン ---- */
+    .group-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #eef3ff;
+      color: #4a90e2;
+      border: none;
+      border-radius: 20px;
+      padding: 7px 16px;
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.2s;
+      width: auto;
+      font-family: inherit;
+    }
+
+    .group-btn:hover { background: #dce8ff; }
+
+    .group-btn .badge {
+      background: #4a90e2;
+      color: white;
+      font-size: 11px;
+      font-weight: bold;
+      border-radius: 50%;
+      width: 18px;
+      height: 18px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* ---- モーダルオーバーレイ ---- */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.45);
+      z-index: 2000;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+
+    .modal-overlay.open { display: flex; }
+
+    .modal {
+      background: white;
+      border-radius: 18px;
+      width: 100%;
+      max-width: 440px;
+      max-height: 88vh;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+      overflow: hidden;
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 20px 14px;
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    .modal-header h3 {
+      margin: 0;
+      font-size: 1rem;
+      color: #333;
+    }
+
+    .modal-close {
+      background: none;
+      border: none;
+      font-size: 1.3rem;
+      color: #aaa;
+      cursor: pointer;
+      width: auto;
+      padding: 2px 8px;
+      border-radius: 6px;
+      line-height: 1;
+      font-family: inherit;
+    }
+
+    .modal-close:hover { background: #f5f5f5; color: #555; }
+
+    .modal-tabs {
+      display: flex;
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    .modal-tab {
+      flex: 1;
+      padding: 11px;
+      border: none;
+      background: none;
+      font-size: 0.85rem;
+      font-weight: bold;
+      color: #aaa;
+      cursor: pointer;
+      transition: color 0.15s;
+      width: auto;
+      border-bottom: 2px solid transparent;
+      font-family: inherit;
+    }
+
+    .modal-tab:hover { color: #555; }
+    .modal-tab.active { color: #4a90e2; border-bottom-color: #4a90e2; }
+
+    .modal-body {
+      overflow-y: auto;
+      padding: 20px;
+      flex: 1;
+    }
+
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* ---- グループ一覧 ---- */
+    .group-item {
+      border: 1px solid #e8e8e8;
+      border-radius: 12px;
+      overflow: hidden;
+      margin-bottom: 12px;
+    }
+
+    .group-item-header {
+      background: #f8f9fa;
+      padding: 12px 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .group-item-info { flex: 1; min-width: 0; }
+
+    .group-item-name {
+      font-weight: bold;
+      font-size: 0.95rem;
+      color: #333;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .group-item-meta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 3px;
+      flex-wrap: wrap;
+    }
+
+    .group-code-badge {
+      font-family: monospace;
+      font-size: 0.8rem;
+      color: #4a90e2;
+      background: #eef3ff;
+      padding: 2px 7px;
+      border-radius: 5px;
+      letter-spacing: 2px;
+      font-weight: bold;
+    }
+
+    .group-member-count { font-size: 0.75rem; color: #999; }
+
+    .owner-badge {
+      font-size: 0.65rem;
+      background: #fff8e1;
+      color: #f39c12;
+      font-weight: bold;
+      padding: 2px 6px;
+      border-radius: 10px;
+      border: 1px solid #ffe082;
+    }
+
+    .group-item-actions { display: flex; gap: 6px; flex-shrink: 0; }
+
+    .btn-group-toggle {
+      font-size: 0.75rem;
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: 7px;
+      padding: 4px 9px;
+      cursor: pointer;
+      color: #555;
+      width: auto;
+      font-family: inherit;
+    }
+
+    .btn-group-toggle:hover { background: #f0f0f0; }
+
+    .btn-group-leave {
+      font-size: 0.75rem;
+      background: white;
+      border: 1px solid #fcc;
+      border-radius: 7px;
+      padding: 4px 9px;
+      cursor: pointer;
+      color: #e74c3c;
+      width: auto;
+      font-family: inherit;
+    }
+
+    .btn-group-leave:hover { background: #fff0f0; }
+
+    /* ---- メンバーリスト ---- */
+    .member-list { display: none; border-top: 1px solid #f0f0f0; }
+    .member-list.open { display: block; }
+
+    .member-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 14px;
+      border-bottom: 1px solid #f8f8f8;
+    }
+
+    .member-item:last-child { border-bottom: none; }
+
+    .member-avatar {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: #eef3ff;
+      color: #4a90e2;
+      font-size: 0.75rem;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .member-info { flex: 1; min-width: 0; }
+
+    .member-name { font-size: 0.85rem; font-weight: bold; color: #333; }
+    .member-you { font-size: 0.7rem; color: #aaa; margin-left: 4px; }
+    .member-joined { font-size: 0.7rem; color: #bbb; }
+
+    .btn-remove-member {
+      background: none;
+      border: none;
+      color: #ccc;
+      font-size: 0.85rem;
+      cursor: pointer;
+      padding: 3px 7px;
+      border-radius: 5px;
+      width: auto;
+      line-height: 1;
+    }
+
+    .btn-remove-member:hover { background: #fff0f0; color: #e74c3c; }
+
+    /* ---- フォーム共通 ---- */
+    .group-form-desc {
+      font-size: 0.85rem;
+      color: #888;
+      margin-bottom: 16px;
+      line-height: 1.7;
+    }
+
+    /* ---- 作成・参加 成功画面 ---- */
+    .success-screen { text-align: center; padding: 10px 0; }
+    .success-icon { font-size: 3rem; margin-bottom: 12px; }
+    .success-title { font-size: 1.1rem; font-weight: bold; color: #333; margin-bottom: 4px; }
+    .success-sub { font-size: 0.85rem; color: #888; margin-bottom: 20px; }
+
+    .invite-code-box {
+      background: #eef3ff;
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 14px;
+    }
+
+    .invite-code-label { font-size: 0.75rem; color: #888; margin-bottom: 6px; }
+
+    .invite-code-value {
+      font-family: monospace;
+      font-size: 2rem;
+      font-weight: bold;
+      color: #4a90e2;
+      letter-spacing: 6px;
+      margin-bottom: 8px;
+    }
+
+    .btn-copy-code {
+      background: none;
+      border: none;
+      color: #4a90e2;
+      font-size: 0.85rem;
+      cursor: pointer;
+      text-decoration: underline;
+      width: auto;
+      font-family: inherit;
+    }
+
+    .max-members-note { font-size: 0.75rem; color: #bbb; margin-bottom: 16px; }
+
+    .btn-to-list {
+      display: block;
+      width: 100%;
+      padding: 11px;
+      background: #4a90e2;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 0.95rem;
+      font-weight: bold;
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    .btn-to-list:hover { background: #357abd; }
+
+    /* ---- 空状態 ---- */
+    .group-empty { text-align: center; padding: 30px 0; color: #bbb; font-size: 0.9rem; }
+    .group-empty .ge-icon { font-size: 2.5rem; margin-bottom: 8px; }
+
+    /* ---- エラー ---- */
+    .field-error { color: #e74c3c; font-size: 0.78rem; margin-top: 4px; }
+
+    /* ---- グループヘッダー行 ---- */
+    .page-header-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 32px;
+    }
+
+    .page-header-row header { margin-bottom: 0; }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+
+    <header>
+      <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:12px; flex-wrap:wrap;">
+        <div>
+          <p class="logo">SHORT DIARY</p>
+          <h1>今日を、2〜3行だけ。</h1>
+          <p class="subtitle">
+            長く書かなくていい。<br>
+            今日のことを、少しだけ残そう。
+          </p>
+        </div>
+        <!-- グループ管理ボタン -->
+        <button class="group-btn" id="openGroupModal" onclick="openGroupModal()">
+          👥 グループ
+          <span class="badge" id="groupBadge" style="display:none;">0</span>
+        </button>
+      </div>
+    </header>
+
+    <div class="layout">
+
+      <!-- 左側 -->
+      <div class="left">
+
+        <!-- 日記入力 -->
+        <section class="card">
+          <h2 class="card-title" id="formTitle">今日の日記</h2>
+
+          <form id="diaryForm">
+
+            <label for="date">日付</label>
+            <input type="date" id="date" required>
+
+            <label for="text">今日の2〜3行</label>
+            <textarea
+              id="text"
+              maxlength="180"
+              rows="3"
+              placeholder="今日あったこと、感じたことを一言だけでも。"
+              required
+            ></textarea>
+
+            <div class="counter">
+              <span id="counter">0</span>/180
+            </div>
+
+            <label>今日の気分</label>
+
+            <div class="moods">
+              <button type="button" class="mood selected" data-mood="😊">😊</button>
+              <button type="button" class="mood" data-mood="😐">😐</button>
+              <button type="button" class="mood" data-mood="😞">😞</button>
+            </div>
+
+            <div class="buttons">
+              <button class="save-btn" type="submit" id="saveButton">
+                日記を残す
+              </button>
+
+              <button
+                type="button"
+                class="cancel-btn"
+                id="cancelButton"
+                style="display:none;"
+              >
+                キャンセル
+              </button>
+            </div>
+
+          </form>
+        </section>
+
+        <!-- カレンダー -->
+        <section class="card">
+
+          <div class="calendar-header">
+            <div class="calendar-title" id="calendarTitle"></div>
+
+            <div class="calendar-buttons">
+              <button id="prevMonth">‹</button>
+              <button id="nextMonth">›</button>
+            </div>
+          </div>
+
+          <div class="weekdays">
+            <div>日</div>
+            <div>月</div>
+            <div>火</div>
+            <div>水</div>
+            <div>木</div>
+            <div>金</div>
+            <div>土</div>
+          </div>
+
+          <div class="calendar-grid" id="calendar"></div>
+
+        </section>
+
+      </div>
+
+      <!-- 右側 -->
+      <section>
+
+        <div class="timeline-header">
+          <div>
+            <h2 class="timeline-title">振り返り</h2>
+          </div>
+
+          <span class="count" id="count">0日分の日記</span>
+        </div>
+
+        <div class="diary-list" id="diaryList"></div>
+
+      </section>
+
+    </div>
+  </div>
+
+  <div class="toast" id="toast">日記を保存しました。</div>
+
+  <script>
+    const STORAGE_KEY = "short-diary-data";
+
+    let diaries = JSON.parse(
+      localStorage.getItem(STORAGE_KEY) || "[]"
+    );
+
+    let selectedMood = "😊";
+    let editingId = null;
+
+    const today = new Date();
+
+    let calendarYear = today.getFullYear();
+    let calendarMonth = today.getMonth();
+
+    const form = document.getElementById("diaryForm");
+    const dateInput = document.getElementById("date");
+    const textInput = document.getElementById("text");
+    const counter = document.getElementById("counter");
+    const diaryList = document.getElementById("diaryList");
+    const count = document.getElementById("count");
+    const calendar = document.getElementById("calendar");
+    const calendarTitle = document.getElementById("calendarTitle");
+    const formTitle = document.getElementById("formTitle");
+    const saveButton = document.getElementById("saveButton");
+    const cancelButton = document.getElementById("cancelButton");
+    const toast = document.getElementById("toast");
+
+    // 今日の日付
+    function getTodayString() {
+      const d = new Date();
+
+      const year = d.getFullYear();
+      const month = String(d.getMonth() + 1).padStart(2, "0");
+      const day = String(d.getDate()).padStart(2, "0");
+
+      return `${year}-${month}-${day}`;
+    }
+
+    dateInput.value = getTodayString();
+
+    // 気分選択
+    document.querySelectorAll(".mood").forEach(button => {
+      button.addEventListener("click", () => {
+        document.querySelectorAll(".mood").forEach(btn => {
+          btn.classList.remove("selected");
+        });
+
+        button.classList.add("selected");
+        selectedMood = button.dataset.mood;
+      });
+    });
+
+    // 文字数カウント
+    textInput.addEventListener("input", () => {
+      counter.textContent = textInput.value.length;
+    });
+
+    // 保存
+    form.addEventListener("submit", event => {
+      event.preventDefault();
+
+      const text = textInput.value.trim();
+
+      if (!text) {
+        textInput.focus();
+        return;
+      }
+
+      const now = new Date().toISOString();
+
+      if (editingId) {
+
+        diaries = diaries.map(diary => {
+          if (diary.id === editingId) {
+            return {
+              ...diary,
+              date: dateInput.value,
+              text: text,
+              mood: selectedMood,
+              updatedAt: now
+            };
+          }
+
+          return diary;
+        });
+
+        showToast("日記を更新しました。");
+
+      } else {
+
+        const newDiary = {
+          id: Date.now().toString(),
+          date: dateInput.value,
+          text: text,
+          mood: selectedMood,
+          createdAt: now,
+          updatedAt: now
+        };
+
+        diaries.push(newDiary);
+
+        showToast("日記を保存しました。");
+      }
+
+      saveData();
+      resetForm();
+      render();
+    });
+
+    // LocalStorage保存
+    function saveData() {
+      localStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify(diaries)
+      );
+    }
+
+    // フォームリセット
+    function resetForm() {
+      editingId = null;
+
+      formTitle.textContent = "今日の日記";
+      saveButton.textContent = "日記を残す";
+      cancelButton.style.display = "none";
+
+      dateInput.value = getTodayString();
+      textInput.value = "";
+      counter.textContent = "0";
+
+      selectedMood = "😊";
+
+      document.querySelectorAll(".mood").forEach(button => {
+        button.classList.toggle(
+          "selected",
+          button.dataset.mood === "😊"
+        );
+      });
+    }
+
+    // 編集
+    function editDiary(id) {
+      const diary = diaries.find(item => item.id === id);
+
+      if (!diary) return;
+
+      editingId = id;
+
+      dateInput.value = diary.date;
+      textInput.value = diary.text;
+      counter.textContent = diary.text.length;
+
+      selectedMood = diary.mood;
+
+      document.querySelectorAll(".mood").forEach(button => {
+        button.classList.toggle(
+          "selected",
+          button.dataset.mood === diary.mood
+        );
+      });
+
+      formTitle.textContent = "日記を編集";
+      saveButton.textContent = "変更を保存";
+      cancelButton.style.display = "block";
+
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+      });
+    }
+
+    // 編集キャンセル
+    cancelButton.addEventListener("click", () => {
+      resetForm();
+    });
+
+    // 削除
+    function deleteDiary(id) {
+      const diary = diaries.find(item => item.id === id);
+
+      if (!diary) return;
+
+      const ok = confirm(
+        "この日記を削除しますか？"
+      );
+
+      if (!ok) return;
+
+      diaries = diaries.filter(
+        item => item.id !== id
+      );
+
+      saveData();
+      render();
+
+      showToast("日記を削除しました。");
+    }
+
+    // 日記一覧
+    function renderDiaries() {
+
+      diaries.sort((a, b) => {
+        return b.date.localeCompare(a.date);
+      });
+
+      count.textContent =
+        `${diaries.length}日分の日記`;
+
+      if (diaries.length === 0) {
+
+        diaryList.innerHTML = `
+          <div class="empty">
+            <div class="empty-icon">✍️</div>
+            <p class="empty-title">
+              まだ日記がありません
+            </p>
+            <p class="empty-text">
+              今日の2〜3行から始めてみましょう。
+            </p>
+          </div>
+        `;
+
+        return;
+      }
+
+      diaryList.innerHTML = diaries.map(diary => {
+
+        const date = new Date(
+          `${diary.date}T00:00:00`
+        );
+
+        const formattedDate =
+          date.toLocaleDateString("ja-JP", {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+            weekday: "short"
+          });
+
+        return `
+          <article class="diary">
+
+            <div class="diary-top">
+              <span class="diary-date">
+                ${formattedDate}
+              </span>
+
+              <span class="diary-mood">
+                ${diary.mood}
+              </span>
+            </div>
+
+            <p class="diary-text">
+              ${escapeHtml(diary.text)}
+            </p>
+
+            <div class="diary-actions">
+
+              <button
+                class="action"
+                onclick="editDiary('${diary.id}')"
+              >
+                編集
+              </button>
+
+              <button
+                class="action delete"
+                onclick="deleteDiary('${diary.id}')"
+              >
+                削除
+              </button>
+
+            </div>
+
+          </article>
+        `;
+
+      }).join("");
+    }
+
+    // カレンダー
+    function renderCalendar() {
+
+      const monthName =
+        new Date(
+          calendarYear,
+          calendarMonth,
+          1
+        ).toLocaleDateString("ja-JP", {
+          year: "numeric",
+          month: "long"
+        });
+
+      calendarTitle.textContent = monthName;
+
+      const firstDay =
+        new Date(
+          calendarYear,
+          calendarMonth,
+          1
+        ).getDay();
+
+      const daysInMonth =
+        new Date(
+          calendarYear,
+          calendarMonth + 1,
+          0
+        ).getDate();
+
+      const diaryDates = new Set(
+        diaries.map(diary => diary.date)
+      );
+
+      let html = "";
+
+      // 月初の空白
+      for (let i = 0; i < firstDay; i++) {
+        html += "<div></div>";
+      }
+
+      for (let day = 1; day <= daysInMonth; day++) {
+
+        const date =
+          `${calendarYear}-${String(calendarMonth + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+
+        const hasDiary =
+          diaryDates.has(date);
+
+        const isToday =
+          date === getTodayString();
+
+        html += `
+          <div
+            class="day
+              ${hasDiary ? "has-diary" : ""}
+              ${isToday ? "today" : ""}
+          "
+            title="${hasDiary ? "日記あり" : ""}"
+          >
+            ${day}
+          </div>
+        `;
+      }
+
+      calendar.innerHTML = html;
+    }
+
+    // 前月
+    document.getElementById("prevMonth")
+      .addEventListener("click", () => {
+
+        calendarMonth--;
+
+        if (calendarMonth < 0) {
+          calendarMonth = 11;
+          calendarYear--;
+        }
+
+        renderCalendar();
+      });
+
+    // 次月
+    document.getElementById("nextMonth")
+      .addEventListener("click", () => {
+
+        calendarMonth++;
+
+        if (calendarMonth > 11) {
+          calendarMonth = 0;
+          calendarYear++;
+        }
+
+        renderCalendar();
+      });
+
+    // HTMLエスケープ
+    function escapeHtml(text) {
+      const div = document.createElement("div");
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    // 通知
+    let toastTimer;
+
+    function showToast(message) {
+
+      toast.textContent = message;
+      toast.classList.add("show");
+
+      clearTimeout(toastTimer);
+
+      toastTimer = setTimeout(() => {
+        toast.classList.remove("show");
+      }, 1800);
+    }
+
+    // 全体更新
+    function render() {
+      renderDiaries();
+      renderCalendar();
+    }
+
+    render();
+
+    // =====================================================
+    // グループ機能
+    // =====================================================
+    const GROUP_STORAGE_KEY = 'short-diary-groups';
+    const USER_ID_KEY       = 'short-diary-user-id';
+    const MAX_MEMBERS       = 50;
+
+    // ── ユーザーID（端末ごとに永続化）──
+    function getOrCreateUserId() {
+      let id = localStorage.getItem(USER_ID_KEY);
+      if (!id) {
+        id = Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+        localStorage.setItem(USER_ID_KEY, id);
+      }
+      return id;
+    }
+
+    // ── グループの読み書き ──
+    function loadGroups() {
+      try { return JSON.parse(localStorage.getItem(GROUP_STORAGE_KEY) || '[]'); }
+      catch { return []; }
+    }
+
+    function persistGroups(groups) {
+      localStorage.setItem(GROUP_STORAGE_KEY, JSON.stringify(groups));
+    }
+
+    // ── 6桁の招待コード生成 ──
+    function generateCode() {
+      const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+      return Array.from({ length: 6 }, () => chars[Math.floor(Math.random() * chars.length)]).join('');
+    }
+
+    // ── モーダル開閉 ──
+    function openGroupModal() {
+      document.getElementById('groupModal').classList.add('open');
+      switchTab('list');
+    }
+
+    function closeGroupModal() {
+      document.getElementById('groupModal').classList.remove('open');
+    }
+
+    // オーバーレイ外クリックで閉じる
+    document.getElementById('groupModal').addEventListener('click', function(e) {
+      if (e.target === this) closeGroupModal();
+    });
+
+    // Escキーで閉じる
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') closeGroupModal();
+    });
+
+    // ── タブ切り替え ──
+    function switchTab(name) {
+      ['list','create','join'].forEach(function(t) {
+        document.getElementById('tab-'   + t).classList.toggle('active', t === name);
+        document.getElementById('panel-' + t).classList.toggle('active', t === name);
+      });
+      if (name === 'list')   renderGroupList();
+      if (name === 'create') resetCreateForm();
+      if (name === 'join')   resetJoinForm();
+    }
+
+    // ── グループ一覧レンダリング ──
+    function renderGroupList() {
+      const groups = loadGroups();
+      const userId = getOrCreateUserId();
+      const el     = document.getElementById('groupList');
+
+      // バッジ更新
+      const badge = document.getElementById('groupBadge');
+      if (groups.length > 0) {
+        badge.textContent = groups.length;
+        badge.style.display = 'inline-flex';
+      } else {
+        badge.style.display = 'none';
+      }
+
+      if (groups.length === 0) {
+        el.innerHTML = '<div class="group-empty"><div class="ge-icon">👥</div><div>グループにまだ参加していません</div><div style="font-size:0.8rem;margin-top:6px;">「作成」か「参加」タブから始めましょう</div></div>';
+        return;
+      }
+
+      el.innerHTML = groups.map(function(group) {
+        const isOwner     = group.ownerId === userId;
+        const memberCount = group.members.length;
+
+        const memberRows = group.members.map(function(m) {
+          return '<div class="member-item">' +
+            '<div class="member-avatar">' + escapeForGroup(m.displayName.charAt(0)) + '</div>' +
+            '<div class="member-info">' +
+              '<div class="member-name">' + escapeForGroup(m.displayName) +
+                (m.userId === userId ? '<span class="member-you">（あなた）</span>' : '') +
+                (m.userId === group.ownerId ? ' 👑' : '') +
+              '</div>' +
+              '<div class="member-joined">' + new Date(m.joinedAt).toLocaleDateString('ja-JP') + ' 参加</div>' +
+            '</div>' +
+            (isOwner && m.userId !== userId
+              ? '<button class="btn-remove-member" onclick="handleRemoveMember(\'' + group.id + '\',\'' + m.userId + '\')" title="' + escapeForGroup(m.displayName) + 'を削除">✕</button>'
+              : '') +
+          '</div>';
+        }).join('');
+
+        return '<div class="group-item" id="gi-' + group.id + '">' +
+          '<div class="group-item-header">' +
+            '<div class="group-item-info">' +
+              '<div class="group-item-name">' + escapeForGroup(group.name) + '</div>' +
+              '<div class="group-item-meta">' +
+                '<span class="group-code-badge">' + group.code + '</span>' +
+                '<button class="btn-copy-code" style="font-size:0.75rem;text-decoration:none;" onclick="copyCode(\'' + group.code + '\',this)" title="招待コードをコピー">📋</button>' +
+                '<span class="group-member-count">' + memberCount + '/' + MAX_MEMBERS + '人</span>' +
+                (isOwner ? '<span class="owner-badge">オーナー</span>' : '') +
+              '</div>' +
+            '</div>' +
+            '<div class="group-item-actions">' +
+              '<button class="btn-group-toggle" onclick="toggleMembers(\'' + group.id + '\')">▼ メンバー</button>' +
+              '<button class="btn-group-leave" onclick="handleLeaveGroup(\'' + group.id + '\',\'' + isOwner + '\')">' + (isOwner ? '解散' : '退出') + '</button>' +
+            '</div>' +
+          '</div>' +
+          '<div class="member-list" id="ml-' + group.id + '">' + memberRows + '</div>' +
+        '</div>';
+      }).join('');
+    }
+
+    // ── メンバーリスト展開/閉じる ──
+    function toggleMembers(groupId) {
+      const ml  = document.getElementById('ml-' + groupId);
+      const btn = ml.previousElementSibling.querySelector('.btn-group-toggle');
+      const isOpen = ml.classList.toggle('open');
+      btn.textContent = isOpen ? '▲ 閉じる' : '▼ メンバー';
+    }
+
+    // ── 招待コードをコピー ──
+    function copyCode(code, btnEl) {
+      navigator.clipboard.writeText(code).then(function() {
+        const orig = btnEl.textContent;
+        btnEl.textContent = '✅';
+        setTimeout(function() { btnEl.textContent = orig; }, 2000);
+      });
+    }
+
+    // ── グループ退出 / 解散 ──
+    function handleLeaveGroup(groupId, isOwnerStr) {
+      const isOwner = isOwnerStr === 'true';
+      const msg = isOwner
+        ? 'グループを解散しますか？（全メンバーが退出になります）'
+        : 'このグループを退出しますか？';
+      if (!confirm(msg)) return;
+
+      const userId = getOrCreateUserId();
+      let groups   = loadGroups();
+
+      if (isOwner) {
+        groups = groups.filter(function(g) { return g.id !== groupId; });
+      } else {
+        const idx = groups.findIndex(function(g) { return g.id === groupId; });
+        if (idx !== -1) {
+          groups[idx].members = groups[idx].members.filter(function(m) { return m.userId !== userId; });
+        }
+      }
+      persistGroups(groups);
+      renderGroupList();
+    }
+
+    // ── メンバーを削除（オーナーのみ） ──
+    function handleRemoveMember(groupId, targetUserId) {
+      const groups = loadGroups();
+      const userId = getOrCreateUserId();
+      const idx    = groups.findIndex(function(g) { return g.id === groupId; });
+      if (idx === -1) return;
+      const group  = groups[idx];
+      if (group.ownerId !== userId) return;
+
+      const target = group.members.find(function(m) { return m.userId === targetUserId; });
+      if (!target) return;
+      if (!confirm('「' + target.displayName + '」さんをグループから削除しますか？')) return;
+
+      groups[idx].members = group.members.filter(function(m) { return m.userId !== targetUserId; });
+      persistGroups(groups);
+      renderGroupList();
+    }
+
+    // ── グループ作成フォーム ──
+    function resetCreateForm() {
+      document.getElementById('newGroupName').value      = '';
+      document.getElementById('createDisplayName').value = '';
+      document.getElementById('newGroupNameErr').textContent      = '';
+      document.getElementById('createDisplayNameErr').textContent = '';
+      document.getElementById('createForm').style.display    = 'block';
+      document.getElementById('createSuccess').style.display = 'none';
+    }
+
+    function handleCreateGroup() {
+      const name        = document.getElementById('newGroupName').value.trim();
+      const displayName = document.getElementById('createDisplayName').value.trim();
+      let valid = true;
+
+      document.getElementById('newGroupNameErr').textContent      = '';
+      document.getElementById('createDisplayNameErr').textContent = '';
+
+      if (!name)        { document.getElementById('newGroupNameErr').textContent = 'グループ名を入力してください'; valid = false; }
+      if (!displayName) { document.getElementById('createDisplayNameErr').textContent = 'あなたの名前を入力してください'; valid = false; }
+      if (!valid) return;
+
+      const userId = getOrCreateUserId();
+      const group  = {
+        id:        Date.now().toString(36) + Math.random().toString(36).slice(2,6),
+        name:      name,
+        code:      generateCode(),
+        createdAt: Date.now(),
+        ownerId:   userId,
+        members:   [{ userId: userId, displayName: displayName, joinedAt: Date.now() }]
+      };
+
+      const groups = loadGroups();
+      groups.push(group);
+      persistGroups(groups);
+
+      // 成功画面へ
+      document.getElementById('createForm').style.display    = 'none';
+      document.getElementById('createSuccess').style.display = 'block';
+      document.getElementById('createdGroupName').textContent = group.name;
+      document.getElementById('createdGroupCode').textContent = group.code;
+
+      // バッジ更新
+      const badge = document.getElementById('groupBadge');
+      badge.textContent = groups.length;
+      badge.style.display = 'inline-flex';
+    }
+
+    function copyCreatedCode() {
+      const code = document.getElementById('createdGroupCode').textContent;
+      navigator.clipboard.writeText(code).then(function() {
+        const btn = document.querySelector('#createSuccess .btn-copy-code');
+        btn.textContent = '✅ コピーしました';
+        setTimeout(function() { btn.textContent = '📋 コードをコピー'; }, 2000);
+      });
+    }
+
+    // ── グループ参加フォーム ──
+    function resetJoinForm() {
+      document.getElementById('joinCode').value        = '';
+      document.getElementById('joinDisplayName').value = '';
+      document.getElementById('joinCodeErr').textContent        = '';
+      document.getElementById('joinDisplayNameErr').textContent = '';
+      document.getElementById('joinForm').style.display    = 'block';
+      document.getElementById('joinSuccess').style.display = 'none';
+    }
+
+    function handleJoinGroup() {
+      const code        = document.getElementById('joinCode').value.trim().toUpperCase();
+      const displayName = document.getElementById('joinDisplayName').value.trim();
+      let valid = true;
+
+      document.getElementById('joinCodeErr').textContent        = '';
+      document.getElementById('joinDisplayNameErr').textContent = '';
+
+      if (!code)              { document.getElementById('joinCodeErr').textContent = '招待コードを入力してください'; valid = false; }
+      else if (code.length !== 6) { document.getElementById('joinCodeErr').textContent = '招待コードは6文字です'; valid = false; }
+      if (!displayName)       { document.getElementById('joinDisplayNameErr').textContent = 'あなたの名前を入力してください'; valid = false; }
+      if (!valid) return;
+
+      const userId = getOrCreateUserId();
+      const groups = loadGroups();
+      const idx    = groups.findIndex(function(g) { return g.code === code; });
+
+      if (idx === -1) {
+        document.getElementById('joinCodeErr').textContent = '招待コードが見つかりません。もう一度確認してください'; return;
+      }
+      if (groups[idx].members.some(function(m) { return m.userId === userId; })) {
+        document.getElementById('joinCodeErr').textContent = 'すでにこのグループに参加しています'; return;
+      }
+      if (groups[idx].members.length >= MAX_MEMBERS) {
+        document.getElementById('joinCodeErr').textContent = 'このグループはすでに ' + MAX_MEMBERS + ' 人の上限に達しています'; return;
+      }
+
+      groups[idx].members.push({ userId: userId, displayName: displayName, joinedAt: Date.now() });
+      persistGroups(groups);
+
+      // 成功画面へ
+      document.getElementById('joinForm').style.display    = 'none';
+      document.getElementById('joinSuccess').style.display = 'block';
+      document.getElementById('joinedGroupName').textContent = groups[idx].name;
+      document.getElementById('joinedGroupSub').textContent  = 'メンバー ' + groups[idx].members.length + '/' + MAX_MEMBERS + ' 人';
+
+      // バッジ更新
+      const badge = document.getElementById('groupBadge');
+      badge.textContent = groups.length;
+      badge.style.display = 'inline-flex';
+    }
+
+    // ── XSS対策（グループ用） ──
+    function escapeForGroup(str) {
+      if (!str) return '';
+      return String(str).replace(/[&<>'"]/g, function(c) {
+        return {'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c];
+      });
+    }
+
+    // 初回バッジ反映
+    (function() {
+      const g = loadGroups();
+      if (g.length > 0) {
+        const badge = document.getElementById('groupBadge');
+        badge.textContent = g.length;
+        badge.style.display = 'inline-flex';
+      }
+    })();
+  </script>
+
+  <!-- ========== グループ管理モーダル ========== -->
+  <div class="modal-overlay" id="groupModal">
+    <div class="modal" role="dialog" aria-modal="true" aria-label="グループ管理">
+
+      <!-- モーダルヘッダー -->
+      <div class="modal-header">
+        <h3>👥 グループ管理</h3>
+        <button class="modal-close" onclick="closeGroupModal()" aria-label="閉じる">✕</button>
+      </div>
+
+      <!-- タブ -->
+      <div class="modal-tabs">
+        <button class="modal-tab active" id="tab-list"   onclick="switchTab('list')">参加中</button>
+        <button class="modal-tab"        id="tab-create" onclick="switchTab('create')">作成</button>
+        <button class="modal-tab"        id="tab-join"   onclick="switchTab('join')">参加</button>
+      </div>
+
+      <!-- タブ本体 -->
+      <div class="modal-body">
+
+        <!-- ─── 参加中タブ ─── -->
+        <div class="tab-panel active" id="panel-list">
+          <div id="groupList"></div>
+        </div>
+
+        <!-- ─── 作成タブ ─── -->
+        <div class="tab-panel" id="panel-create">
+          <!-- 通常フォーム -->
+          <div id="createForm">
+            <p class="group-form-desc">
+              グループを作成すると 6桁の招待コードが発行されます。<br>
+              そのコードを友達に教えて参加してもらいましょう。
+            </p>
+            <div class="form-group">
+              <label for="newGroupName">グループ名 <span style="color:#e74c3c">*</span></label>
+              <input type="text" id="newGroupName" placeholder="例：夏休み日記グループ" maxlength="30">
+              <div class="field-error" id="newGroupNameErr"></div>
+            </div>
+            <div class="form-group">
+              <label for="createDisplayName">あなたの名前 <span style="color:#e74c3c">*</span></label>
+              <input type="text" id="createDisplayName" placeholder="例：たろう" maxlength="20">
+              <div class="field-error" id="createDisplayNameErr"></div>
+            </div>
+            <button class="btn-primary" onclick="handleCreateGroup()">✨ グループを作成する</button>
+          </div>
+          <!-- 作成成功画面 -->
+          <div class="success-screen" id="createSuccess" style="display:none;">
+            <div class="success-icon">🎉</div>
+            <div class="success-title" id="createdGroupName"></div>
+            <div class="success-sub">グループを作成しました！</div>
+            <div class="invite-code-box">
+              <div class="invite-code-label">友達にこの招待コードを教えましょう</div>
+              <div class="invite-code-value" id="createdGroupCode"></div>
+              <button class="btn-copy-code" onclick="copyCreatedCode()">📋 コードをコピー</button>
+            </div>
+            <div class="max-members-note">最大 50 人まで参加できます</div>
+            <button class="btn-to-list" onclick="switchTab('list')">グループ一覧へ</button>
+          </div>
+        </div>
+
+        <!-- ─── 参加タブ ─── -->
+        <div class="tab-panel" id="panel-join">
+          <!-- 通常フォーム -->
+          <div id="joinForm">
+            <p class="group-form-desc">
+              グループオーナーから受け取った<br>
+              6桁の招待コードを入力してください。
+            </p>
+            <div class="form-group">
+              <label for="joinCode">招待コード <span style="color:#e74c3c">*</span></label>
+              <input type="text" id="joinCode" placeholder="例：AB3X9Z" maxlength="6"
+                style="font-family:monospace; letter-spacing:4px; font-size:1.1rem; text-transform:uppercase;"
+                oninput="this.value=this.value.toUpperCase()">
+              <div class="field-error" id="joinCodeErr"></div>
+            </div>
+            <div class="form-group">
+              <label for="joinDisplayName">あなたの名前 <span style="color:#e74c3c">*</span></label>
+              <input type="text" id="joinDisplayName" placeholder="例：はなこ" maxlength="20">
+              <div class="field-error" id="joinDisplayNameErr"></div>
+            </div>
+            <button class="btn-primary" onclick="handleJoinGroup()">🚪 グループに参加する</button>
+          </div>
+          <!-- 参加成功画面 -->
+          <div class="success-screen" id="joinSuccess" style="display:none;">
+            <div class="success-icon">🙌</div>
+            <div class="success-title" id="joinedGroupName"></div>
+            <div class="success-sub" id="joinedGroupSub"></div>
+            <button class="btn-to-list" onclick="switchTab('list')">グループ一覧へ</button>
+          </div>
+        </div>
+
+      </div><!-- /.modal-body -->
+    </div><!-- /.modal -->
+  </div><!-- /.modal-overlay -->
+
+</body>
+</html>
