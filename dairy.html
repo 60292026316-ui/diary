@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
@@ -143,17 +143,18 @@
 
     .moods {
       display: flex;
-      gap: 10px;
+      gap: 8px;
       margin-bottom: 22px;
+      flex-wrap: wrap;
     }
 
     .mood {
-      width: 50px;
-      height: 50px;
+      width: 44px;
+      height: 44px;
       border: 0;
-      border-radius: 16px;
+      border-radius: 14px;
       background: #f1f5f9;
-      font-size: 24px;
+      font-size: 22px;
       transition: 0.2s;
     }
 
@@ -787,6 +788,304 @@
     }
 
     .page-header-row header { margin-bottom: 0; }
+
+    /* ---- ランキングボタン ---- */
+    .ranking-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #fff8e1;
+      color: #f39c12;
+      border: none;
+      border-radius: 20px;
+      padding: 7px 16px;
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.2s;
+      font-family: inherit;
+    }
+    .ranking-btn:hover { background: #ffeaa7; }
+
+    /* ---- ランキングモーダル ---- */
+    .ranking-podium {
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+      gap: 12px;
+      margin: 20px 0 24px;
+    }
+    .podium-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+    .podium-rank {
+      font-size: 1.8rem;
+    }
+    .podium-name {
+      font-size: 0.9rem;
+      font-weight: bold;
+      color: #333;
+      max-width: 100px;
+      text-align: center;
+      word-break: break-all;
+    }
+    .podium-comment {
+      font-size: 0.75rem;
+      color: #888;
+      max-width: 100px;
+      text-align: center;
+      word-break: break-all;
+      line-height: 1.5;
+    }
+    .podium-block {
+      width: 80px;
+      border-radius: 10px 10px 0 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: white;
+    }
+    .podium-1 .podium-block { height: 80px; background: linear-gradient(135deg,#f6d365,#fda085); }
+    .podium-2 .podium-block { height: 60px; background: linear-gradient(135deg,#c0c0c0,#a0a0a0); }
+    .podium-3 .podium-block { height: 45px; background: linear-gradient(135deg,#cd7f32,#a0522d); }
+
+    .ranking-week-label {
+      text-align: center;
+      font-size: 0.8rem;
+      color: #aaa;
+      margin-bottom: 16px;
+    }
+
+    .ranking-vote-btn {
+      display: block;
+      width: 100%;
+      padding: 12px;
+      background: #4a90e2;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 0.95rem;
+      font-weight: bold;
+      cursor: pointer;
+      font-family: inherit;
+      text-align: center;
+      text-decoration: none;
+      margin-bottom: 10px;
+    }
+    .ranking-vote-btn:hover { background: #357abd; }
+
+    .ranking-admin-link {
+      display: block;
+      text-align: center;
+      font-size: 0.78rem;
+      color: #bbb;
+      cursor: pointer;
+      margin-top: 6px;
+      background: none;
+      border: none;
+      font-family: inherit;
+      text-decoration: underline;
+    }
+    .ranking-admin-link:hover { color: #888; }
+
+    .ranking-empty {
+      text-align: center;
+      padding: 20px 0;
+      color: #bbb;
+      font-size: 0.9rem;
+    }
+    .ranking-empty .re-icon { font-size: 2.5rem; margin-bottom: 8px; }
+
+    /* ---- ランキング管理フォーム ---- */
+    .ranking-admin-form { display: none; }
+    .ranking-admin-form.open { display: block; }
+    .ranking-admin-title {
+      font-size: 0.85rem;
+      font-weight: bold;
+      color: #555;
+      margin-bottom: 12px;
+      padding-top: 12px;
+      border-top: 1px solid #f0f0f0;
+    }
+    .ranking-admin-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+    .ranking-admin-row .rank-label {
+      font-size: 1.1rem;
+      width: 24px;
+      flex-shrink: 0;
+    }
+    .ranking-admin-row input {
+      flex: 1;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 6px 10px;
+      font-size: 0.85rem;
+      font-family: inherit;
+      background: #f8fafc;
+      color: #334155;
+    }
+    .ranking-admin-row input:focus {
+      outline: none;
+      border-color: #cbd5e1;
+      background: #fff;
+    }
+    .ranking-save-btn {
+      width: 100%;
+      padding: 10px;
+      background: #1e293b;
+      color: white;
+      border: none;
+      border-radius: 9px;
+      font-size: 0.9rem;
+      font-weight: bold;
+      cursor: pointer;
+      font-family: inherit;
+      margin-top: 4px;
+    }
+    .ranking-save-btn:hover { background: #334155; }
+
+    /* ---- 音楽・写真入力 ---- */
+    .media-input-group {
+      margin-bottom: 18px;
+    }
+
+    .media-input-group label {
+      display: block;
+      margin-bottom: 6px;
+      color: #64748b;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .media-input-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .media-input-row input[type="text"] {
+      flex: 1;
+      height: 42px;
+      padding: 0 12px;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      background: #f8fafc;
+      color: #334155;
+      font-size: 13px;
+      outline: none;
+      transition: 0.2s;
+      font-family: inherit;
+    }
+
+    .media-input-row input[type="text"]:focus {
+      background: #fff;
+      border-color: #cbd5e1;
+      box-shadow: 0 0 0 3px rgba(148,163,184,0.15);
+    }
+
+    .media-input-row input[type="text"]::placeholder {
+      color: #cbd5e1;
+      font-size: 12px;
+    }
+
+    /* ---- 写真アップロード ---- */
+    .photo-upload-label {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      width: 100%;
+      height: 42px;
+      border: 1.5px dashed #cbd5e1;
+      border-radius: 12px;
+      color: #94a3b8;
+      font-size: 13px;
+      cursor: pointer;
+      transition: 0.2s;
+      background: #f8fafc;
+    }
+
+    .photo-upload-label:hover {
+      border-color: #94a3b8;
+      background: #f1f5f9;
+      color: #64748b;
+    }
+
+    .photo-preview-wrap {
+      position: relative;
+      margin-top: 8px;
+      display: none;
+    }
+
+    .photo-preview-wrap.has-photo { display: block; }
+
+    .photo-preview {
+      width: 100%;
+      max-height: 160px;
+      object-fit: cover;
+      border-radius: 12px;
+      display: block;
+    }
+
+    .photo-remove-btn {
+      position: absolute;
+      top: 6px;
+      right: 6px;
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: rgba(0,0,0,0.5);
+      color: white;
+      border: none;
+      font-size: 14px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1;
+    }
+
+    /* ---- 日記カード内メディア ---- */
+    .diary-photo {
+      width: 100%;
+      max-height: 200px;
+      object-fit: cover;
+      border-radius: 12px;
+      margin-bottom: 10px;
+      display: block;
+    }
+
+    .diary-music-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      margin-top: 10px;
+      padding: 5px 12px;
+      border-radius: 20px;
+      background: #f1f5f9;
+      color: #475569;
+      font-size: 12px;
+      font-weight: 600;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      font-family: inherit;
+      transition: 0.2s;
+    }
+
+    .diary-music-btn:hover {
+      background: #e2e8f0;
+      color: #1e293b;
+    }
   </style>
 </head>
 
@@ -808,6 +1107,10 @@
         <button class="group-btn" id="openGroupModal" onclick="openGroupModal()">
           👥 グループ
           <span class="badge" id="groupBadge" style="display:none;">0</span>
+        </button>
+        <!-- ランキングボタン -->
+        <button class="ranking-btn" onclick="openRankingModal()">
+          🏆 ランキング
         </button>
       </div>
     </header>
@@ -839,12 +1142,40 @@
               <span id="counter">0</span>/180
             </div>
 
+            <!-- 写真添付 -->
+            <div class="media-input-group">
+              <label>思い出の写真（任意）</label>
+              <label class="photo-upload-label" for="photoInput">
+                📷 写真を選ぶ
+              </label>
+              <input type="file" id="photoInput" accept="image/*" style="display:none;">
+              <div class="photo-preview-wrap" id="photoPreviewWrap">
+                <img id="photoPreview" class="photo-preview" src="" alt="プレビュー">
+                <button type="button" class="photo-remove-btn" onclick="removePhoto()">✕</button>
+              </div>
+            </div>
+
+            <!-- 音楽URL -->
+            <div class="media-input-group">
+              <label for="musicUrl">🎵 今日の一曲（YouTubeのURLを貼り付け）</label>
+              <div class="media-input-row">
+                <input type="text" id="musicUrl" placeholder="https://www.youtube.com/watch?v=...">
+              </div>
+            </div>
+
             <label>今日の気分</label>
 
             <div class="moods">
               <button type="button" class="mood selected" data-mood="😊">😊</button>
+              <button type="button" class="mood" data-mood="😄">😄</button>
+              <button type="button" class="mood" data-mood="🥰">🥰</button>
+              <button type="button" class="mood" data-mood="😎">😎</button>
+              <button type="button" class="mood" data-mood="🤔">🤔</button>
               <button type="button" class="mood" data-mood="😐">😐</button>
+              <button type="button" class="mood" data-mood="😴">😴</button>
+              <button type="button" class="mood" data-mood="😢">😢</button>
               <button type="button" class="mood" data-mood="😞">😞</button>
+              <button type="button" class="mood" data-mood="😤">😤</button>
             </div>
 
             <div class="buttons">
@@ -922,6 +1253,7 @@
 
     let selectedMood = "😊";
     let editingId = null;
+    let selectedPhotoData = null; // base64画像データ
 
     const today = new Date();
 
@@ -971,6 +1303,33 @@
       counter.textContent = textInput.value.length;
     });
 
+    // 写真選択
+    document.getElementById("photoInput").addEventListener("change", function() {
+      const file = this.files[0];
+      if (!file) return;
+      // 5MB上限チェック
+      if (file.size > 5 * 1024 * 1024) {
+        alert("写真のサイズは5MB以下にしてください。");
+        this.value = "";
+        return;
+      }
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        selectedPhotoData = e.target.result;
+        document.getElementById("photoPreview").src = selectedPhotoData;
+        document.getElementById("photoPreviewWrap").classList.add("has-photo");
+      };
+      reader.readAsDataURL(file);
+    });
+
+    // 写真削除
+    function removePhoto() {
+      selectedPhotoData = null;
+      document.getElementById("photoInput").value = "";
+      document.getElementById("photoPreview").src = "";
+      document.getElementById("photoPreviewWrap").classList.remove("has-photo");
+    }
+
     // 保存
     form.addEventListener("submit", event => {
       event.preventDefault();
@@ -993,6 +1352,8 @@
               date: dateInput.value,
               text: text,
               mood: selectedMood,
+              photo: selectedPhotoData !== null ? selectedPhotoData : diary.photo,
+              musicUrl: document.getElementById("musicUrl").value.trim() || diary.musicUrl || null,
               updatedAt: now
             };
           }
@@ -1009,6 +1370,8 @@
           date: dateInput.value,
           text: text,
           mood: selectedMood,
+          photo: selectedPhotoData || null,
+          musicUrl: document.getElementById("musicUrl").value.trim() || null,
           createdAt: now,
           updatedAt: now
         };
@@ -1051,6 +1414,10 @@
           button.dataset.mood === "😊"
         );
       });
+
+      // 写真・音楽リセット
+      removePhoto();
+      document.getElementById("musicUrl").value = "";
     }
 
     // 編集
@@ -1073,6 +1440,18 @@
           button.dataset.mood === diary.mood
         );
       });
+
+      // 写真の反映
+      if (diary.photo) {
+        selectedPhotoData = diary.photo;
+        document.getElementById("photoPreview").src = diary.photo;
+        document.getElementById("photoPreviewWrap").classList.add("has-photo");
+      } else {
+        removePhoto();
+      }
+
+      // 音楽URLの反映
+      document.getElementById("musicUrl").value = diary.musicUrl || "";
 
       formTitle.textContent = "日記を編集";
       saveButton.textContent = "変更を保存";
@@ -1165,9 +1544,18 @@
               </span>
             </div>
 
+            ${diary.photo ? `<img class="diary-photo" src="${diary.photo}" alt="思い出の写真">` : ""}
+
             <p class="diary-text">
               ${escapeHtml(diary.text)}
             </p>
+
+            ${diary.musicUrl ? `
+            <a class="diary-music-btn"
+               href="${escapeHtml(diary.musicUrl)}"
+               target="_blank" rel="noopener">
+              🎵 今日の一曲を聴く
+            </a>` : ""}
 
             <div class="diary-actions">
 
@@ -1184,6 +1572,15 @@
               >
                 削除
               </button>
+
+              <a
+                class="action"
+                href="https://docs.google.com/forms/d/e/1FAIpQLSetpHNIgUV18yZj2pCR2PUGHIfsuOdat54mypA6zToI8PP08g/viewform?usp=publish-editor"
+                target="_blank"
+                rel="noopener"
+              >
+                💬 感想を送る
+              </a>
 
             </div>
 
@@ -1627,7 +2024,189 @@
         badge.style.display = 'inline-flex';
       }
     })();
+
+    // =====================================================
+    // ランキング機能
+    // =====================================================
+    const RANKING_STORAGE_KEY      = 'short-diary-ranking';
+    const RANKING_ANNOUNCED_KEY    = 'short-diary-ranking-announced';
+    const VOTE_FORM_URL            = 'https://docs.google.com/forms/d/e/1FAIpQLSdmX8mJXc55Qjw7DGt_lhSq5fx4K4eD2_nrmBimnzZztJNiSg/viewform?usp=header';
+
+    // 当週の月曜日の日付文字列（YYYY-MM-DD）を返す
+    function getThisMonday() {
+      const d = new Date();
+      const day = d.getDay(); // 0=日, 1=月
+      const diff = (day === 0) ? -6 : 1 - day;
+      d.setDate(d.getDate() + diff);
+      return d.toISOString().slice(0, 10);
+    }
+
+    // ランキングデータを読み込む
+    function loadRanking() {
+      try { return JSON.parse(localStorage.getItem(RANKING_STORAGE_KEY) || 'null'); }
+      catch { return null; }
+    }
+
+    // ランキングデータを保存する
+    function saveRankingData(data) {
+      localStorage.setItem(RANKING_STORAGE_KEY, JSON.stringify(data));
+    }
+
+    // ランキングモーダルを開く
+    function openRankingModal() {
+      document.getElementById('rankingModal').classList.add('open');
+      renderRankingModal();
+    }
+
+    // ランキングモーダルを閉じる
+    function closeRankingModal() {
+      document.getElementById('rankingModal').classList.remove('open');
+    }
+
+    // オーバーレイ外クリックで閉じる
+    document.getElementById('rankingModal').addEventListener('click', function(e) {
+      if (e.target === this) closeRankingModal();
+    });
+
+    // 管理フォームの表示切り替え
+    function toggleRankingAdmin() {
+      const form = document.getElementById('rankingAdminForm');
+      const isOpen = form.classList.toggle('open');
+      // 既存データをフォームに反映
+      if (isOpen) {
+        const data = loadRanking();
+        if (data && data.ranks) {
+          document.getElementById('rank1Name').value    = data.ranks[0] ? data.ranks[0].name    : '';
+          document.getElementById('rank1Comment').value = data.ranks[0] ? data.ranks[0].comment : '';
+          document.getElementById('rank2Name').value    = data.ranks[1] ? data.ranks[1].name    : '';
+          document.getElementById('rank2Comment').value = data.ranks[1] ? data.ranks[1].comment : '';
+          document.getElementById('rank3Name').value    = data.ranks[2] ? data.ranks[2].name    : '';
+          document.getElementById('rank3Comment').value = data.ranks[2] ? data.ranks[2].comment : '';
+        }
+      }
+    }
+
+    // ランキングを保存する
+    function saveRanking() {
+      const ranks = [
+        { name: document.getElementById('rank1Name').value.trim(),    comment: document.getElementById('rank1Comment').value.trim() },
+        { name: document.getElementById('rank2Name').value.trim(),    comment: document.getElementById('rank2Comment').value.trim() },
+        { name: document.getElementById('rank3Name').value.trim(),    comment: document.getElementById('rank3Comment').value.trim() },
+      ];
+      if (!ranks[0].name) { alert('1位の名前を入力してください'); return; }
+      const data = { ranks: ranks, savedAt: Date.now(), monday: getThisMonday() };
+      saveRankingData(data);
+      document.getElementById('rankingAdminForm').classList.remove('open');
+      renderRankingModal();
+      showToast('ランキングを保存しました。');
+    }
+
+    // ランキングモーダルを描画する
+    function renderRankingModal() {
+      const data   = loadRanking();
+      const monday = getThisMonday();
+      const podium = document.getElementById('rankingPodium');
+      const label  = document.getElementById('rankingWeekLabel');
+
+      // 週ラベル
+      const mondayDate = new Date(monday + 'T00:00:00');
+      const sundayDate = new Date(mondayDate);
+      sundayDate.setDate(mondayDate.getDate() + 6);
+      const fmt = (d) => d.toLocaleDateString('ja-JP', { month: 'long', day: 'numeric' });
+      label.textContent = fmt(mondayDate) + ' 〜 ' + fmt(sundayDate) + ' の週';
+
+      // データなし
+      if (!data || !data.ranks || !data.ranks[0] || !data.ranks[0].name) {
+        podium.innerHTML =
+          '<div class="ranking-empty">' +
+          '<div class="re-icon">🏆</div>' +
+          '<div>今週のランキングはまだ発表されていません</div>' +
+          '<div style="font-size:0.75rem;margin-top:6px;">日曜日23:59までに投票してください</div>' +
+          '</div>';
+        return;
+      }
+
+      // 表彰台の順番：2位・1位・3位
+      const medals  = ['🥇','🥈','🥉'];
+      const order   = [1, 0, 2]; // 表示順（真ん中が1位）
+      const classes = ['podium-2','podium-1','podium-3'];
+
+      podium.innerHTML = '<div class="ranking-podium">' +
+        order.map(function(i, j) {
+          const r = data.ranks[i];
+          if (!r || !r.name) return '';
+          return '<div class="podium-item ' + classes[j] + '">' +
+            '<div class="podium-rank">' + medals[i] + '</div>' +
+            '<div class="podium-name">' + escapeForGroup(r.name) + '</div>' +
+            (r.comment ? '<div class="podium-comment">' + escapeForGroup(r.comment) + '</div>' : '') +
+            '<div class="podium-block">' + (i + 1) + '</div>' +
+          '</div>';
+        }).join('') +
+      '</div>';
+    }
+
+    // 月曜日の初回アクセス時にランキングを自動表示する
+    (function() {
+      const today = new Date();
+      if (today.getDay() !== 1) return; // 月曜日以外はスキップ
+      const monday    = getThisMonday();
+      const announced = localStorage.getItem(RANKING_ANNOUNCED_KEY);
+      if (announced === monday) return; // 今週すでに表示済み
+      const data = loadRanking();
+      if (!data || !data.ranks || !data.ranks[0] || !data.ranks[0].name) return; // データなし
+      // 今週のデータかチェック
+      if (data.monday !== monday) return;
+      localStorage.setItem(RANKING_ANNOUNCED_KEY, monday);
+      setTimeout(function() { openRankingModal(); }, 800);
+    })();
   </script>
+
+  <!-- ========== ランキングモーダル ========== -->
+  <div class="modal-overlay" id="rankingModal">
+    <div class="modal" role="dialog" aria-modal="true" aria-label="週間ランキング">
+      <div class="modal-header">
+        <h3>🏆 週間ランキング</h3>
+        <button class="modal-close" onclick="closeRankingModal()" aria-label="閉じる">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="ranking-week-label" id="rankingWeekLabel"></div>
+
+        <!-- 表彰台 -->
+        <div id="rankingPodium"></div>
+
+        <!-- 投票ボタン -->
+        <a class="ranking-vote-btn"
+           href="https://docs.google.com/forms/d/e/1FAIpQLSdmX8mJXc55Qjw7DGt_lhSq5fx4K4eD2_nrmBimnzZztJNiSg/viewform?usp=header"
+           target="_blank" rel="noopener">
+          📝 今週の投票をする（日曜23:59まで）
+        </a>
+
+        <!-- 管理者リンク -->
+        <button class="ranking-admin-link" onclick="toggleRankingAdmin()">オーナー：ランキングを設定する</button>
+
+        <!-- 管理フォーム -->
+        <div class="ranking-admin-form" id="rankingAdminForm">
+          <div class="ranking-admin-title">ランキング入力（Googleフォーム集計後に入力）</div>
+          <div class="ranking-admin-row">
+            <span class="rank-label">🥇</span>
+            <input type="text" id="rank1Name" placeholder="1位の名前" maxlength="20">
+            <input type="text" id="rank1Comment" placeholder="ひとこと（任意）" maxlength="30">
+          </div>
+          <div class="ranking-admin-row">
+            <span class="rank-label">🥈</span>
+            <input type="text" id="rank2Name" placeholder="2位の名前" maxlength="20">
+            <input type="text" id="rank2Comment" placeholder="ひとこと（任意）" maxlength="30">
+          </div>
+          <div class="ranking-admin-row">
+            <span class="rank-label">🥉</span>
+            <input type="text" id="rank3Name" placeholder="3位の名前" maxlength="20">
+            <input type="text" id="rank3Comment" placeholder="ひとこと（任意）" maxlength="30">
+          </div>
+          <button class="ranking-save-btn" onclick="saveRanking()">💾 ランキングを保存する</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- ========== グループ管理モーダル ========== -->
   <div class="modal-overlay" id="groupModal">
